@@ -1,0 +1,13 @@
+#
+# GSL gslX680 Touchscreen driver
+#
+config TOUCHSCREEN_GSLX680
+	bool "Goodix touchpanel gslX680 series"
+	depends on I2C
+	help
+	  Say Y here if you have a GSL gslX680 touchscreen
+	  controller.
+
+          If unsure, say N.
+
+

@@ -1,0 +1,29 @@
+#
+# RP-400 drivers
+#
+
+config MACH_RP400
+	bool "RP400 board"
+	help
+	  Select RP400 base board.
+
+config RP400_HW_REV_WS
+	bool "RP400 WS board"
+	depends on MACH_RP400
+	help
+	  Select RP400 WS board.
+
+config RP400_MISC
+	bool "RP-400 misc driver"
+	help
+	  Enable this driver will support RP-400 misc driver.
+
+config ITE_IT8951
+	bool "E-ink Panel Controller"
+	help
+	  Enable this driver will support E-ink Panel.
+
+config ROHM_BU52072GWZ
+	bool "ROHM Omnipolar Detection Hall IC"
+	help
+	  Enable this driver will support Hall IC.

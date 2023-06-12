@@ -1,0 +1,4 @@
+#
+# ERD9630 board specific configuration
+#
+CONFIG_LEDS_S2MU107_FLASH=y

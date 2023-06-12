@@ -1,0 +1,5 @@
+#
+# SMDK3830 board specific configuration
+#
+CONFIG_FAKE_BATT=y
+CONFIG_SCSC_WLBT_CONFIG_PLATFORM="nacho_s612_smdk"

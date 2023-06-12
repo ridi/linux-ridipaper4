@@ -1,0 +1,2 @@
+obj-$(CONFIG_ROHM_BU52072GWZ) += bu52072gwz.o
+

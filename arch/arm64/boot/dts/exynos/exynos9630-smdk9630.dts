@@ -1,0 +1,39 @@
+/*
+ * SAMSUNG EXYNOS9630 board device tree source
+ *
+ * Copyright (c) 2019 Samsung Electronics Co., Ltd.
+ *		http://www.samsung.com
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+/dts-v1/;
+/plugin/;
+#include "exynos9630-smdk9630-cp-s5188ap-sit.dtsi"
+#include "exynos9630-board_common.dtsi"
+#include "exynos9630_smdk9630_battery_data.dtsi"
+
+/ {
+	compatible = "samsung,exynos9630", "samsung,SMDK9630";
+	board_id = <0x1>;
+	board_rev = <0x0>;
+
+	fragment@model {
+		target-path = "/";
+		__overlay__ {
+			#address-cells = <2>;
+			#size-cells = <1>;
+
+			model = "Samsung SMDK9630 board based on EXYNOS9630";
+
+		}; /* end of __overlay__ */
+	}; /* end of fragment */
+}; /* end of root */
+
+/* USI_02_CMGP */
+&usi_02_cmgp {
+	/*	usi_v2_mode = "i2c" or "spi" or "uart"	*/
+	status = "disabled";
+};

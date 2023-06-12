@@ -1,0 +1,46 @@
+/*
+ * Display device tree source
+ *
+ * Copyright (c) 2020 Han Ye <yanghs0702@thundersoft.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+
+#include <dt-bindings/interrupt-controller/exynos3830.h>
+#include <dt-bindings/clock/exynos3830.h>
+
+/ {
+    	fragment@display {
+	    		target-path = "/";
+			__overlay__ {
+
+			};
+	};
+};
+
+&i2c_3 {
+        status = "okay";
+	#address-cells = <1>;
+	#size-cells = <0>;
+        lt9211@2d{
+	    compatible = "lontium,lt9211";
+            reg = <0x2d>;
+            pinctrl-names = "on_state","off_state";
+            pinctrl-0 = <&lt9211_irq>;
+            pinctrl-1 = <&lt9211_input>;
+            lt9211,irq-gpio = <&gpa1 4 0>;
+	};
+
+	lt9611@3b {
+	    compatible = "lontium,lt9611";
+	    reg = <0x3b>;
+	    pinctrl-names ="on_state","lcd_bl_on","off_state";
+	    pinctrl-0 = <&lt9611_irq>;
+	    pinctrl-1 = <&lcd_bl_on>;
+	    pinctrl-2 = <&lt9611_input>;
+    	    lt9611,irq-gpio = <&gpa1 7 0>;
+	};
+};

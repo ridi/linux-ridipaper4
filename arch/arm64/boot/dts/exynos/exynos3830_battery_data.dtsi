@@ -1,0 +1,109 @@
+/*
+ * SAMSUNG EXYNOS3830 board device tree source
+ *
+ * Copyright (c) 2019 Samsung Electronics Co., Ltd.
+ *		http://www.samsung.com
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+/ {
+	fragment@battery {
+		target-path = "/";
+		__overlay__ {
+			battery {
+				status = "okay";
+				compatible = "samsung,s2m-battery";
+
+				pinctrl-names = "default";
+
+				battery,vendor = "SDI SDI";
+				battery,charger_name = "s2mu106-charger";
+				battery,fuelgauge_name = "s2mu106-fuelgauge";
+				battery,wcin_name = "s2mu106-wcin";
+				battery,technology = <2>; /* POWER_SUPPLY_TECHNOLOGY_LION */
+
+				battery,temp_high_limit = <450>;
+				battery,temp_high = <420>;
+				battery,temp_high_recovery = <430>;
+				battery,temp_low = <030>;
+				battery,temp_low_recovery = <020>;
+				battery,low_temp_limit = <100>;  // used by s2mu106_fuelgauge.c
+				battery,temp_low_limit = <000>;  // used by s2m_chg_manager.c
+				battery,temp_missing = <(-400)>;
+				battery,thermal_zone = "batt_thermal_zone";
+				/* From experimental data, open NTC circuit gives a
+				* variable amount of error margin in the temperature
+				* readings. eg: [-400,-340], with -400 is the coldest
+				* temperature from the compensation table: th113h103ft */
+				battery,open_ntc_margin = <100>;
+
+				battery,chg_float_voltage = <4200>;
+				battery,full_check_count = <3>;
+				battery,chg_full_vcell = <4160>;
+				battery,chg_recharge_vcell = <4100>;
+
+				battery,max_rawsoc = <1000>;
+				battery,max_rawsoc_offset = <10>;
+
+				battery,default_input_current = <1250>;
+				battery,default_charging_current = <1250>;
+				battery,default_full_check_current = <100>;
+
+				battery,max_input_current = <3000>;
+				battery,max_charging_current = <3000>;
+
+				battery,pdo_max_input_vol = <12000>; /* mV */
+				battery,pdo_max_chg_power = <36000>; /* mW */
+
+				battery,wcin_charging_current = <2000>;
+				battery,wcin_full_check_current = <100>;
+
+				/* Order of current setting must be same with
+				 * POWER_SUPPLY_TYPE_ of power_supply.h
+				 */
+				battery,input_current_limit =
+					<500 500 500 500 500 500 500 500 500 500
+					500 500 500 500 500 500 500 500>;
+				battery,fast_charging_current =
+					<500 500 500 500 500 500 500 500 500 500
+					500 500 500 500 500 500 500 500>;
+				battery,full_check_current =
+					<300 300 300 300 300 300 300 300 300 300
+					300 300 300 300 300 300 300 300>;
+
+				/* Battery parameter */
+				battery,battery_table3 =
+					<83 9 196 8 53 8 187 7 75 7
+					228 6 136 6 54 6 237 5 171
+					5 86 5 35 5 3 5 232 4 206
+					4 177 4 132 4 68 4 248 3
+					162 3 94 3 209 1 105 8 0 8
+					151 7 46 7 197 6 92 6 242 5
+					137 5 32 5 183 4 78 4 229 3
+					124 3 19 3 169 2 64 2 215 1
+					110 1 5 1 156 0 51 0 213 15>;
+
+				battery,battery_table4 =
+					<10 10 10 10 52 52 52 52 51 51
+					51 50 50 50 51 52 52 53 54 56
+					68 156>;
+
+				battery,batcap = <0xc 0x26 0x22 0x7>; /* [0x0E] [0x0F] [0x10] [0x11] */
+				battery,accum = <0x8 0x00>; /* [0x45] [0x44] */
+
+				battery,soc_arr_val =
+					<10513 10000 9487 8973 8460 7947 7434 6920 6407 5894
+					5381 4867 4354 3841 3328 2814 2301 1788 1275 761 248 (-211)>;
+				battery,ocv_arr_val =
+					<41654 40957 40259 39664 39117 38612 38163 37764 37407 37085
+					36668 36422 36266 36135 36008 35862 35644 35333 34962 34539 34207 32270>;
+
+				battery,battery_param_ver = <0x03>;
+
+			};
+		};
+	};
+};

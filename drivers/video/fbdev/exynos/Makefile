@@ -1,0 +1,1 @@
+obj-$(CONFIG_EXYNOS_DPU30)	+= dpu30/

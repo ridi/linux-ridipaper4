@@ -1,0 +1,160 @@
+/*
+ * SAMSUNG EXYNOS3830 SoC device tree source
+ *
+ * Copyright (c) 2019 Samsung Electronics Co., Ltd.
+ *		http://www.samsung.com
+ *
+ * SAMSUNG EXYNOS9630 SoC device nodes are listed in this file.
+ * EXYNOS9630 based board files can include this file and provide
+ * values for board specfic bindings.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+#include <dt-bindings/interrupt-controller/exynos3830.h>
+
+/ {
+	debug-snapshot-soc {
+		compatible = "debug-snapshot-soc";
+		use_multistage_wdt_irq = <261>;
+
+		/* -----------<< Example >>-------------------
+		dump-info {
+			#address-cells = <1>;
+			#size-cells = <1>;
+
+			gic-setenable {
+				reg = <0x11f01100 0x100>;
+			};
+			gic-setpend {
+				reg = <0x11f01200 0x100>;
+			};
+			gic-setactive {
+				reg = <0x11f01300 0x100>;
+			};
+		};
+		*/
+	};
+
+	ITMON@0 {
+		compatible = "samsung,exynos-itmon";
+		interrupts = <0 INTREQ__TREX_D_CORE_DEBUG_INT 0>,
+			     <0 INTREQ__TREX_P_CORE_DEBUG_INT 0>;
+	};
+
+	exynos-debug-test {
+		compatible = "samsung,exynos-debug-test";
+		enabled = "dbg_test";
+		ps_hold_control_offset = <0x030C>;
+		nr_cpu = <0x8>;
+		nr_little_cpu = <0x4>;
+		nr_big_cpu = <0x4>;
+		little_cpu_start = <0x0>;
+		big_cpu_start = <0x4>;
+	};
+
+	coresight@16000000 {
+		compatible = "exynos,coresight";
+		base = <0x16000000>;
+		sj-offset = <0x6000>;
+
+		cl0_cpu0@800000 {
+			device_type = "cs";
+			dbg-offset = <0x410000>;
+		};
+		cl0_cpu1@900000 {
+			device_type = "cs";
+			dbg-offset = <0x510000>;
+		};
+		cl0_cpu2@A00000 {
+			device_type = "cs";
+			dbg-offset = <0x610000>;
+		};
+		cl0_cpu3@B00000 {
+			device_type = "cs";
+			dbg-offset = <0x710000>;
+		};
+		cl1_cpu0@C00000 {
+			device_type = "cs";
+			dbg-offset = <0x810000>;
+		};
+		cl1_cpu1@D00000 {
+			device_type = "cs";
+			dbg-offset = <0x910000>;
+		};
+		cl2_cpu0@400000 {
+			device_type = "cs";
+			dbg-offset = <0xa10000>;
+		};
+		cl2_cpu1@500000 {
+			device_type = "cs";
+			dbg-offset = <0xb10000>;
+		};
+	};
+
+	exynos-halt {
+		compatible = "samsung,exynos-halt";
+		cs_base = <0x16000000>;
+		gpr-offset = <0x1000>;
+		gpr-dbgack-mask = <0xff00000>;
+
+		cpu0 {
+			cti-offset = <0x420000>;
+		};
+		cpu1 {
+			cti-offset = <0x520000>;
+		};
+		cpu2 {
+			cti-offset = <0x620000>;
+		};
+		cpu3 {
+			cti-offset = <0x720000>;
+		};
+		cpu4 {
+			cti-offset = <0x820000>;
+		};
+		cpu5 {
+			cti-offset = <0x920000>;
+		};
+		cpu6 {
+			cti-offset = <0xa20000>;
+		};
+		cpu7 {
+			cti-offset = <0xb20000>;
+		};
+	};
+
+	exynos-ehld {
+		compatible = "exynos-ehld";
+		#address-cells = <1>;
+		#size-cells = <1>;
+		cs_base = <0x16000000>;
+
+		cpu0 {
+			dbg-offset = <0x410000>;
+		};
+		cpu1 {
+			dbg-offset = <0x510000>;
+		};
+		cpu2 {
+			dbg-offset = <0x610000>;
+		};
+		cpu3 {
+			dbg-offset = <0x710000>;
+		};
+		cpu4 {
+			dbg-offset = <0x810000>;
+		};
+		cpu5 {
+			dbg-offset = <0x910000>;
+		};
+		cpu6 {
+			dbg-offset = <0xa10000>;
+		};
+		cpu7 {
+			dbg-offset = <0xb10000>;
+		};
+	};
+};

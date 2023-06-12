@@ -1,0 +1,159 @@
+/*
+ * SAMSUNG EXYNOS SoC EMS device tree source
+ *
+ * Copyright (c) 2019 Samsung Electronics Co., Ltd.
+ *		http://www.samsung.com
+ *
+ * SAMSUNG EXYNOS SoC EMS device nodes are listed in this file.
+ * EXYNOS based board files should include this file.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ *
+ */
+
+/ {
+	ems {
+		/* Ontime Migration */
+		ontime {
+			/* little cores-1 */
+			coregroup0 {
+				lower-boundary = <0>;
+				upper-boundary = <42>;
+				lower-boundary-s = <0>;
+				upper-boundary-s = <30>;
+			};
+			/* little cores-2 */
+			coregroup1 {
+				lower-boundary = <13>;
+				upper-boundary = <100>;
+				lower-boundary-s = <10>;
+				upper-boundary-s = <100>;
+			};
+		};
+
+		/* Load Balance Trigger */
+		#define DEFAULT_RATIO	80
+		lbt {
+			pre-overutilized-cpus = "0-3";
+
+			overutil-level0 {
+				cpus =	"0-3",
+					"4-7";
+				ratio =	<25>,
+					<25>;
+			};
+			overutil-level1 {
+				cpus = "0-7";
+				ratio = <DEFAULT_RATIO>;
+			};
+		};
+
+		/* FRT Migration */
+		frt {
+			coregroup0 {
+				coverage-ratio = <30>;
+				active-ratio = <25>;
+			};
+			coregroup1 {
+				coverage-ratio = <30>;
+				active-ratio = <25>;
+			};
+		};
+
+		part {
+			coregroup0 {
+				active-ratio-limit = <43>;
+				active-ratio-boost = <42>;
+			};
+			coregroup1 {
+				active-ratio-limit = <43>;
+				active-ratio-boost = <42>;
+			};
+		};
+
+                ems-tune {
+                        mode0 {
+                                idx = <0>;
+                                desc = "normal";
+
+                                /* weight (%) applied to active core's efficiency */
+                                weight {                /* CL0 CL1 */
+                                        root            = <100 50>;
+                                        foreground      = <100 50>;
+                                        background      = <100 50>;
+                                        top-app         = <100 50>;
+                                        rt              = <100 50>;
+                                };
+
+                                /* weight (%) applied to idle core's efficiency */
+                                idle-weight {           /* CL0 CL1 */
+                                        root            = <125 63>;
+                                        foreground      = <125 63>;
+                                        background      = <125 63>;
+                                        top-app         = <125 63>;
+                                        rt              = <125 63>;
+                                };
+
+                                /* Boosting margin applied to frequency selection */
+                                freq-boost {            /* CL0 CL1 */
+                                        root            = <  0   0>;
+                                        foreground      = <  0   0>;
+                                        background      = <  0   0>;
+                                        top-app         = <  5   5>;
+                                        rt              = <  0   0>;
+                                };
+
+                                /* candidate cpus applied to core selection */
+                                candidate-cpus {
+                                        root            = "0-7";
+                                        foreground      = "0-7";
+                                        background      = "0-7";
+                                        top-app         = "0-7";
+                                        rt              = "0-7";
+                                };
+                        };
+		};
+
+		ecs {
+			enabled = <1>;
+
+			ecs-modes {
+				ecs-mode-0 {
+					mode-name = "NO SPARING";
+					cpus = "0-7";
+					enabled = <1>;
+					mode = <NORMAL>;
+				};
+				ecs-mode-1 {
+					mode-name = "SPARING NON_BOOT";
+					cpus = "0-3";
+					enabled = <1>;
+					mode = <SAVING>;
+				};
+			};
+
+			ecs-domains {
+				ecs-domain-0 {
+					domain-name = "BOOT";
+					cpus = "0-3";
+					role = <TRIGGER>;
+					cpu-heavy-thr = <0xffffffff>;
+					cpu-busy-thr = <0>;
+					cpu-nr-running-thr = <2>;
+					domain-nr-running-thr = <6>;
+				};
+				ecs-domain-1 {
+					domain-name = "NON-BOOT";
+					cpus = "4-7";
+					role = <TRIGGER_AND_SAVER>;
+					cpu-heavy-thr = <0xffffffff>;
+					cpu-busy-thr = <0>;
+					cpu-nr-running-thr = <2>;
+					domain-nr-running-thr = <6>;
+				};
+			};
+		};
+	};
+};

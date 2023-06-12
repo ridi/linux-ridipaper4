@@ -1,0 +1,205 @@
+/*
+ * SAMSUNG EXYNOS3830 board device tree source
+ *
+ * Copyright (c) 2018 Samsung Electronics Co., Ltd.
+ *		http://www.samsung.com
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+*/
+
+/dts-v1/;
+/plugin/;
+#include "rp400-board_common.dtsi"
+#include "exynos3830-erd3830-cp-s318ap-sit.dtsi"
+
+#define BOARD_ID	0x2
+#define BOARD_REV	0x0
+
+/ {
+	compatible = "samsung,exynos3830", "samsung,ERD3830";
+	board_id = <BOARD_ID>;
+	board_rev = <BOARD_REV>;
+
+	fragment@model {
+		target-path = "/";
+		__overlay__ {
+			#address-cells = <2>;
+			#size-cells = <1>;
+
+			model = "RIDI RP-400 EVM board based on EXYNOS3830";
+
+			usb_hs_tune:hs_tune {
+				status = "disabled";
+				hs_tune_cnt = <10>;
+				/* value = <device host> */
+				hs_tune1 {
+					tune_name = "tx_pre_emp";
+					tune_value = <0x3 0x3>;
+				};
+
+				hs_tune2 {
+					tune_name = "tx_pre_emp_plus";
+					tune_value = <0x0 0x0>;
+				};
+
+				hs_tune3 {
+					tune_name = "tx_vref";
+					tune_value = <0xf 0xf>;
+				};
+
+				hs_tune4 {
+					tune_name = "rx_sqrx";
+					tune_value = <0x7 0x7>;
+				};
+
+				hs_tune5 {
+					tune_name = "tx_rise";
+					tune_value = <0x3 0x3>;
+				};
+
+				hs_tune6 {
+					tune_name = "compdis";
+					tune_value = <0x7 0x7>;
+				};
+
+				hs_tune7 {
+					tune_name = "tx_hsxv";
+					tune_value = <0x3 0x3>;
+				};
+
+				hs_tune8 {
+					tune_name = "tx_fsls";
+					tune_value = <0x3 0x3>;
+				};
+
+				hs_tune9 {
+					tune_name = "tx_res";
+					tune_value = <0x3 0x3>;
+				};
+
+				hs_tune10 {
+					tune_name = "utmi_clk";
+					tune_value = <0x1 0x1>;
+				};
+			};
+			usb_notifier {
+				compatible = "samsung,usb-notifier";
+				udc = <&udc>;
+			};
+
+			rp400_misc {
+				compatible = "ridi,rp400-misc";
+				pinctrl-names = "default";
+			};
+
+			gpio_keys {
+				status = "okay";
+				compatible = "gpio-keys";
+				pinctrl-names = "default";
+				pinctrl-0 = <&key_pagedown &key_pageup &key_function1>;
+
+				button@1 {
+					label = "gpio-keys: KEY_PAGEDOWN";
+					linux,code = <109>;
+					gpios = <&gpa1 0 0xf>;
+				};
+				button@2 {
+					label = "gpio-keys: KEY_PAGEUP";
+					linux,code = <104>;
+					gpios = <&gpa0 7 0xf>;
+				};
+				button@3 {
+					label = "gpio-keys: KEY_F1";
+					linux,code = <59>;
+					gpios = <&gpa1 5 0xf>;
+				};
+			};
+
+			bu52072gwz {
+				compatible = "rohm,bu52072gwz";
+				pinctrl-names = "default";
+				out_data-gpios = <&gpg2 4 0>;
+			};
+		}; /* end of __overlay__ */
+	}; /* end of fragment */
+}; /* end of root */
+
+&udc {
+	status = "okay";
+};
+
+&usbdrd_dwc3 {
+	dr_mode = "otg";
+	maximum-speed = "high-speed";
+	snps,quirk-frame-length-adjustment = <0x20>;
+	snps,u1u2_exitfail_quirk;
+	/* ux_exit_in_px should be defined in MK, LT */
+	snps,ux_exit_in_px_quirk;
+	/* elastic_buf_mode_quirk should be defined in MK */
+	snps,elastic_buf_mode_quirk;
+	/* usb3-lpm-capable;
+	snps,usb3_lpm_capable;
+	adj-sof-accuracy = <1>; */
+	/*
+	 * dis-u2-freeclk-exists-quirk, dis_u2_susphy_quirk are alternative.
+	 * One of them should be selected
+	 */
+	snps,dis-u2-freeclk-exists-quirk;
+	/*snps,dis_u2_susphy_quirk;*/
+
+	usb_audio_offloading = <0>;
+//	abox = <&abox>; /* Temporary block */
+};
+
+&usbdrd_phy0 {
+	status = "okay";
+	usb3phy-isolation= <1>;
+	pinctrl-names = "default";
+//	pinctrl-0 = <&phy_port>;
+//	phy,gpio_phy_port = <&gpg0 4 0x0>;
+	hs_tune_param = <&usb_hs_tune>;
+//	ss_tune_param = <&usb_ss_tune>;
+};
+
+#if 1
+&spi_0 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&spi0_bus>;
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+
+	spi-epd@0 {
+		compatible = "ite,it8951e";
+		reg = <0>;
+		spi-max-frequency = <12000000>;
+		epd_hrdy-gpios = <&gpg1 0 0>;
+		epd_cs-gpios = <&gpp2 1 0>;
+		epd_reset-gpios = <&gpg2 5 0>;
+		controller-data {
+			//cs-gpio = <&gpp2 1 0>;
+			samsung,spi-feedback-delay = <0>;
+		};
+	};
+};
+#endif
+
+&i2c_2 {
+	status = "okay";
+	#address-cells = <1>;
+	#size-cells = <0>;
+	touchscreen@10 {
+		compatible = "elan,ekth3500";
+		reg = <0x10>;
+		elan,irq-gpio = <&gpa0 0 0>;
+		elan,reset-gpio = <&gpg2 2 1>;
+	};
+};
+
+&panel_0 {
+	ddi_id = <0xfa>;
+	lcd_info = <&lcd_dummy>;
+};
+
